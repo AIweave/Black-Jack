@@ -1,0 +1,87 @@
+import random
+
+logo = r"""
+.------.            _     _            _    _            _    
+|A_  _ |.          | |   | |          | |  (_)          | |   
+|( \/ ).-----.     | |__ | | __ _  ___| | ___  __ _  ___| | __
+| \  /|K /\  |     | '_ \| |/ _` |/ __| |/ / |/ _` |/ __| |/ /
+|  \/ | /  \ |     | |_) | | (_| | (__|   <| | (_| | (__|   < 
+`-----| \  / |     |_.__/|_|\__,_|\___|_|\_\ |\__,_|\___|_|\_\\
+      |  \/ K|                            _/ |                
+      `------'                           |__/           
+"""
+
+cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+
+ace = [11,1]
+
+
+def play():
+    hand = []
+    comp_hand = []
+    print(logo)
+    def pick(cards, size, list):
+        for card in range(size):
+            user = random.choice(cards)
+            list.append(user)
+        return list
+
+    user = pick(cards, 2, hand)
+    score = sum(user)
+    computer = pick(cards, 1, comp_hand)
+
+    stop = False
+    while not stop:
+        if score == 21:
+            print(f"\nYour cards: {user}, current score: {score} \n 🏆YOU WIN!")
+            break
+        else:
+            print(f"\nYour cards: {user}, current score: {score}")
+            stop = True
+        print(f"Computer's first hand: {computer}")
+
+    while score != 21:
+        new_score = score #if no extra card initially, the score remains the same
+        if input("Type 'y' to get another card, type 'n' to pass: ") == 'y':
+            new_hand = pick(cards, 1, hand) #new card gets added to hand[] in pick()
+            new_score = sum(new_hand)
+            print(f"Your new cards: {new_hand}, score: {new_score}")
+            if new_score == 21:
+                print(f"\n🏆 YOU WIN!")
+                break
+            elif new_score > 21:
+                print(f"\nYOU LOSE!")
+                break
+            elif new_score < 21:
+                continue
+        else:
+            user_new_score = sum(user) #total with new card(s)
+            print(f"Your final hand: {user}, final score: {user_new_score}")
+            comp_score = 0
+            while comp_score < user_new_score and comp_score < 21 :
+                new_comp_card = pick(cards, 1, hand) #draw card
+                computer = new_comp_card
+                comp_score = sum(computer)
+                if comp_score == 21:
+                    print(f"\nComputer cards: {computer}, score: {comp_score} \nYOU LOSE!")
+                    break
+                elif comp_score > 21:
+                    print(f"\nComputer cards: {computer}, score: {comp_score} \n🏆 YOU WIN!")
+                    break
+                elif 21 > comp_score > user_new_score:
+                    print(f"\nComputer cards: {computer}, score: {comp_score} \nYOU LOSE!")
+                    break
+        break
+start = input("Press 'y' to Start Game: ").lower()
+if start == 'y':
+    print('\n' * 20)
+    play()
+    while input("Do you want to play again: ") == 'y':
+        print('\n' * 20)
+        play()
+    else:
+        print("Thanks for playing!")
+elif start == 'n':
+    print("Thank you!")
+else:
+    print("Invalid Entry. Start Over.")
